@@ -1,7 +1,8 @@
 import {PostObject} from './postobj.model'
-import { Injectable } from '@angular/core';
+import { Injectable, ɵCodegenComponentFactoryResolver } from '@angular/core';
 import {Subject} from 'rxjs'
 import {HttpClient} from '@angular/common/http'
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 
 @Injectable({providedIn:'root'})
@@ -28,7 +29,14 @@ constructor(private http:HttpClient){}
 
     addPosts(title:string, content:string){
         const post:PostObject ={id: null, title:title, content:content}
-        this.posts.push(post)
-        this.postsUpdated.next([...this.posts])
+       
+        //add to back end code 
+        this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
+        .subscribe((responseData)=>{
+           console.log(responseData.message)
+           this.posts.push(post)
+           this.postsUpdated.next([...this.posts])
+        })
+
     }
 }

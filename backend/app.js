@@ -1,11 +1,16 @@
 const express = require('express');
-
+const bodyParser = require("body-parser")
 const app = express();
+
+//parsing  json
+app.use(bodyParser.json())
+//parsing url
+app.use(bodyParser.urlencoded({extended:false}))
 ///Overcoming CORS error VERY IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!
 app.use((req, res, next)=>{
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Header",
-    "Origin,X-Requested-With, Content_type, Accept"
+    res.setHeader("Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-type, Accept"
     );
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTION"
     );
@@ -17,7 +22,19 @@ app.use((req, res, next)=>{
 //     next();
 // })
 
-app.use('/api/posts',(req, res, next)=>{
+            //Post Request
+//install npm install --save  body parser
+app.post('/api/posts', (req, res, next)=>{
+    const post = req.body;
+    console.log(post)
+    res.status(201).json({
+        message:'Post added successfully'
+    });
+    // next()
+});
+
+            //Get route can use app.use but have to keep next()
+app.get('/api/posts',(req, res, next)=>{
     const posts =[
         {
             id: "fpasodjgpa", 
